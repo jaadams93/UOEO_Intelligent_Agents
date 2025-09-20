@@ -41,15 +41,16 @@ class Storage:
         with open(html_path, "w", encoding="utf-8") as f:
             f.write(self._render_html(items, title=f'Results for "{html.escape(query)}"'))
 
-        log_obj = {"query": query, "run_id": run_id}
+        log_obj: Dict[str, Any] = {"query": query, "run_id": run_id}
         if snapshots:
-            index = {}
+            index: Dict[str, str] = {}
             for k, v in snapshots.items():
                 p = os.path.join(out_dir, f"{run_id}.{k}.json")
                 with open(p, "w", encoding="utf-8") as sf:
                     json.dump(v, sf, ensure_ascii=False, indent=2)
                 index[k] = os.path.basename(p)
             log_obj["snapshots"] = index
+
         with open(log_path, "w", encoding="utf-8") as lf:
             json.dump(log_obj, lf, ensure_ascii=False, indent=2)
 
