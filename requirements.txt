@@ -1,4 +1,15 @@
+# requirements.txt
+# ----------------
+# This project uses a small set of widely used Python libraries.
+
+# HTTP requests to external APIs (arXiv, Crossref, DOAJ)
 requests>=2.31.0
+
+# Parse arXiv's Atom XML feeds into Python objects
 feedparser>=6.0.11
-pytest>=8.3.2
+
+# Parse ISO/other date strings into datetime objects (used for extracting publication year)
 python-dateutil>=2.9.0
+
+# Unit testing framework (used for test scripts to provide evidence of testing)
+pytest>=8.3.2
