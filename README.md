@@ -47,15 +47,17 @@ pip install -r requirements.txt
 The tool accepts inputs via a Command Line Interface (CLI).
 
 Arguments:
-	•	query (positional, required) – the search query, e.g. "machine learning for fraud detection".
-	•	--max-items INT – soft cap per source (default: 100; typical caps: arXiv≈200, Crossref≈100).
-	•	--out-dir PATH – output directory (default: results).
-	•	--with-doaj – include DOAJ as an additional source (off by default).
-	•	--save-snapshots – snapshots are always ON in this demo build, even if flag is omitted.
+- query (positional, required) – the search query, e.g. "machine learning for fraud detection".
+- --max-items INT – soft cap per source (default: 100; typical caps: arXiv≈200, Crossref≈100).
+- --out-dir PATH – output directory (default: results).
+- --with-doaj – include DOAJ as an additional source (off by default).
+- --save-snapshots – snapshots are always ON in this demo build, even if flag is omitted.
 
 Example:
 
+```python
 python cli.py "machine learning for fraud detection" --max-items 100
+```
 
 This will produce several outputs:
 ```
@@ -131,15 +133,15 @@ This provides evidence of execution and correctness (e.g., deduplication, file p
 
 ## Technical Documentation
 
-APIs
-	•	arXiv API User Manual – Atom feed query parameters and record structure.
-	•	Crossref REST API – JSON response fields and query parameters.
-	•	DOAJ API v3 – optional open access metadata endpoint.
+**APIs**  
+- [arXiv API User Manual](https://arxiv.org/help/api/user-manual) – Atom feed query parameters and record structure.  
+- [Crossref REST API](https://api.crossref.org/swagger-ui/index.html) – JSON response fields and query parameters.  
+- [DOAJ API v3](https://doaj.org/api/v3/docs) – optional open access metadata endpoint.  
 
-Python Libraries
-	•	requests: HTTP for Humans – HTTP client used for API calls.
-	•	feedparser: Universal Feed Parser – parses arXiv Atom XML to Python objects.
-	•	python-dateutil – parses publication dates to extract years.
-	•	pytest – unit testing framework for evidence of testing.
-
+**Python Libraries**  
+- [requests: HTTP for Humans](https://requests.readthedocs.io/en/latest/) – HTTP client used for API calls.  
+- [feedparser: Universal Feed Parser](https://feedparser.readthedocs.io/en/latest/) – parses arXiv Atom XML to Python objects.  
+- [python-dateutil](https://dateutil.readthedocs.io/en/stable/) – parses publication dates to extract years.  
+- [pytest](https://docs.pytest.org/en/stable/) – unit testing framework for evidence of testing.
+  
 ---
