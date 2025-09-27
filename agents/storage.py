@@ -5,7 +5,7 @@ from typing import List, Dict, Any
 import csv
 import json
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 
 """
 Imports:
@@ -86,7 +86,7 @@ class StorageAgent:
         - No external CSS/JS to keep it portable.
         """
         out_path = self._ensure_out_dir(out_dir) / f"{run_id}.html"
-        ts = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+        ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
 
         # Minimal escaping for text inserted into HTML.
         def esc(x: Any) -> str:
@@ -267,7 +267,7 @@ class StorageAgent:
         log_obj = {
             "run_id": run_id,
             "query": query,
-            "generated_at": datetime.utcnow().isoformat() + "Z",
+            "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             "counts": {
                 "total_records": len(items),
             },

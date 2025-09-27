@@ -7,7 +7,7 @@ This first section imports several libraries:
 
 import argparse
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from agents.coordinator import CoordinatorAgent
 
 
@@ -58,7 +58,7 @@ def main():
     Create a run_id used as the basis for output filenames.
     It combines the query (as a safe slug) and the current UTC timestamp.
     """
-    ts = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     run_id = f"{_slugify(args.query)}_{ts}"
 
     """
