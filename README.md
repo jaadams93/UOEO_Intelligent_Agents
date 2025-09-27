@@ -62,8 +62,8 @@ This will search for 'machine learning for fraud detection'. You can insert any 
 This will produce several outputs:
 ```
 results/machine-learning-for-fraud-detection_YYYYMMDD_HHMMSS.csv
-- results/machine-learning-for-fraud-detection_YYYYMMDD_HHMMSS.html
-- results/machine-learning-for-fraud-detection_YYYYMMDD_HHMMSS.log.json
+results/machine-learning-for-fraud-detection_YYYYMMDD_HHMMSS.html
+results/machine-learning-for-fraud-detection_YYYYMMDD_HHMMSS.log.json
 ```
 These are: 
 	-	CSV – structured dataset (open in Excel/Sheets or load into analysis tools).
