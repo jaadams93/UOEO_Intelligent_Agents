@@ -1,11 +1,11 @@
 # Academic Research Online Agent
 
-A lightweight multi-agent tool, developed with Python, that queries academic resource datase **arXiv** (Atom) and **Crossref** (JSON), normalises and de-duplicates results (priority: **DOI → arXiv ID → title-hash**), and then exports:
+A lightweight multi-agent tool, developed with Python, that queries academic resource databases **arXiv** (Atom) and **Crossref** (JSON), normalises and de-duplicates results (priority: **DOI → arXiv ID → title-hash**), and then exports:
 
 - a timestamped **CSV** (structured research results)
 - a simple **HTML** page (client-side filter/search for browsing)
 - a small **LOG** file (JSON) with reproducible run parameters
-- optional **raw API snapshots** (for evidence/debugging)
+- **raw API snapshots** (always saved in this demo build for evidence/debugging)
 
 > **DOAJ** is optional via `--with-doaj` (off by default).
 
@@ -17,7 +17,7 @@ A lightweight multi-agent tool, developed with Python, that queries academic res
 - **API-first**: uses official APIs (no scraping) for stability, ethics, and reproducibility.
 - **Reproducible runs**: timestamped filenames + JSON log of parameters and counts.
 - **Portable**: runs locally, no database or cloud required.
-- **Evidence-friendly**: optional raw snapshots of API payloads.
+- **Evidence-friendly**: raw snapshots are always saved for demo/evidence.
 
 ---
 
@@ -40,49 +40,50 @@ source .venv/bin/activate    # Linux/Mac
 pip install -r requirements.txt
 ```
 
----
+⸻
 
-## Run a query 
+## Run a Query
 
-The tools accepts inputs via a simple Command Line Interface using a positional arguments, with several optional arguments:
-- query (positional) – the search query, e.g. "machine learning for fraud detection".
-- --max-items INT – soft cap per source (default: 100; typical caps: arXiv≈200, Crossref≈100).
-- --out-dir PATH – output directory (default: results).
-- --with-doaj – include DOAJ as an additional source (off by default).
-- --save-snapshots – save raw API payloads (useful for assignment evidence).
+The tool accepts inputs via a Command Line Interface (CLI).
 
-After instantiating the environment and installing the requirements, execute the folowing sample query: 
+Arguments:
+	•	query (positional, required) – the search query, e.g. "machine learning for fraud detection".
+	•	--max-items INT – soft cap per source (default: 100; typical caps: arXiv≈200, Crossref≈100).
+	•	--out-dir PATH – output directory (default: results).
+	•	--with-doaj – include DOAJ as an additional source (off by default).
+	•	--save-snapshots – snapshots are always ON in this demo build, even if flag is omitted.
 
-```bash
-python cli.py "machine learning for fraud detection" --max-items 100 --save-snapshots
-```
+Example:
 
-This will search for 'machine learning for fraud detection'. You can insert any query here. 
+python cli.py "machine learning for fraud detection" --max-items 100
 
 This will produce several outputs:
 ```
 results/machine-learning-for-fraud-detection_YYYYMMDD_HHMMSS.csv
 results/machine-learning-for-fraud-detection_YYYYMMDD_HHMMSS.html
 results/machine-learning-for-fraud-detection_YYYYMMDD_HHMMSS.log.json
-```
-These are: 
-	-	CSV – structured dataset (open in Excel/Sheets or load into analysis tools).
-	-	HTML – lightweight results page with a search box (client-side filtering).
-	-	LOG – JSON with run parameters, counts, timestamps, file paths.
-	-  	Snapshots – optional raw API payloads (useful for evidence of execution).
 
----
+```
+- CSV – structured dataset (open in Excel/Sheets or load into analysis tools).
+- HTML – lightweight results page with a search box (client-side filtering).
+- LOG – JSON with run parameters, counts, timestamps, file paths.
+- Snapshots – raw API payloads (saved by default for evidence of execution).
+
+⸻
 
 ## Automated Testing
 
-Run unit tests using **pytest**:
-```
+Run unit tests using pytest:
+```python
 pytest -q
 ```
 
----
+This provides evidence of execution and correctness (e.g., deduplication, file persistence).
 
-##Project Structure
+⸻
+
+## Project Structure
+
 ```
 ├── cli.py                   # Command-line entry point
 ├── agents/
@@ -90,8 +91,8 @@ pytest -q
 │   ├── discovery.py         # Builds request plans for arXiv, Crossref, DOAJ
 │   ├── fetch.py             # Executes HTTP requests (requests.Session, timeouts)
 │   ├── extract.py           # Normalises arXiv (Atom) + Crossref/DOAJ (JSON) to common schema
-│   ├── storage.py           # Dedupes and writes CSV, HTML, JSON log
 │   └── coordinator.py       # Orchestrates the multi-agent workflow
+├── storage.py               # Dedupes and writes CSV, HTML, JSON log
 ├── tests/                   # Unit tests (pytest)
 │   └── test_storage_dedupe.py
 ├── requirements.txt         # Python dependencies
@@ -99,18 +100,18 @@ pytest -q
 └── results/                 # Output folder (auto-created)
 ```
 
----
+⸻
 
-##Project Architecture
+## Project Architecture
 
-- DiscoveryAgent – translates the user query into API request plans. Demonstrates two approaches intentionally:
-		- arXiv: manual query-string construction.
-		- Crossref/DOAJ: pass params dict and let requests encode.
+- DiscoveryAgent – translates the user query into API request plans.
+  Demonstrates two approaches intentionally:
+	- arXiv: manual query-string construction.
+	- Crossref/DOAJ: pass params dict and let requests encode.
 - FetchAgent – executes plans via requests.Session with timeouts and polite headers.
 - ExtractAgent – parses and normalises heterogeneous payloads into a unified record:
-
-  ```JSON
-  {
+```
+{
   "source": "...",
   "doi": "...",
   "arxiv_id": "...",
@@ -120,20 +121,25 @@ pytest -q
   "year": 2024,
   "url": "...",
   "subjects": ["..."]
-  ```
-- StorageAgent – de-duplicates across sources (priority: DOI → arXiv ID → title) and persists CSV/HTML/JSON.
-- CoordinatorAgent – orchestrates the flow end-to-end (plans → fetch → extract → dedupe → persist).
+}
+```
 
----
+- StorageAgent – de-duplicates across sources (priority: DOI → arXiv ID → title) and persists CSV/HTML/JSON.
+- CoordinatorAgent – orchestrates the full pipeline (plans → fetch → extract → dedupe → persist).
+
+⸻
+
 ## Technical Documentation
 
-**APIs**  
-- [arXiv API User Manual](https://arxiv.org/help/api/user-manual) – Atom feed query parameters and record structure.  
-- [Crossref REST API](https://api.crossref.org/swagger-ui/index.html) – JSON response fields and query parameters.  
-- [DOAJ API v3](https://doaj.org/api/v3/docs) – optional open access metadata endpoint.  
+APIs
+	•	arXiv API User Manual – Atom feed query parameters and record structure.
+	•	Crossref REST API – JSON response fields and query parameters.
+	•	DOAJ API v3 – optional open access metadata endpoint.
 
-**Python Libraries**  
-- [requests: HTTP for Humans](https://requests.readthedocs.io/en/latest/) – HTTP client used for API calls.  
-- [feedparser: Universal Feed Parser](https://feedparser.readthedocs.io/en/latest/) – parses arXiv Atom XML to Python objects.  
-- [python-dateutil](https://dateutil.readthedocs.io/en/stable/) – parses publication dates to extract years.  
-- [pytest](https://docs.pytest.org/en/stable/) – unit testing framework for evidence of testing.  
+Python Libraries
+	•	requests: HTTP for Humans – HTTP client used for API calls.
+	•	feedparser: Universal Feed Parser – parses arXiv Atom XML to Python objects.
+	•	python-dateutil – parses publication dates to extract years.
+	•	pytest – unit testing framework for evidence of testing.
+
+---
