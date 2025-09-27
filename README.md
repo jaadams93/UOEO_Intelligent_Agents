@@ -70,3 +70,70 @@ These are:
 	-	HTML – lightweight results page with a search box (client-side filtering).
 	-	LOG – JSON with run parameters, counts, timestamps, file paths.
 	-  	Snapshots – optional raw API payloads (useful for evidence of execution).
+
+---
+
+## Automated Testing
+
+Run unit tests using **pytest**:
+```
+pytest -q
+```
+
+---
+
+##Project Structure
+```
+├── cli.py                   # Command-line entry point
+├── agents/
+│   ├── __init__.py          # Package marker (exports agents)
+│   ├── discovery.py         # Builds request plans for arXiv, Crossref, DOAJ
+│   ├── fetch.py             # Executes HTTP requests (requests.Session, timeouts)
+│   ├── extract.py           # Normalises arXiv (Atom) + Crossref/DOAJ (JSON) to common schema
+│   ├── storage.py           # Dedupes and writes CSV, HTML, JSON log
+│   └── coordinator.py       # Orchestrates the multi-agent workflow
+├── tests/                   # Unit tests (pytest)
+│   └── test_storage_dedupe.py
+├── requirements.txt         # Python dependencies
+├── .gitignore               # Ignore caches, venv, and results
+└── results/                 # Output folder (auto-created)
+```
+
+---
+
+##Project Architecture
+
+- DiscoveryAgent – translates the user query into API request plans. Demonstrates two approaches intentionally:
+		- arXiv: manual query-string construction.
+		- Crossref/DOAJ: pass params dict and let requests encode.
+- FetchAgent – executes plans via requests.Session with timeouts and polite headers.
+- ExtractAgent – parses and normalises heterogeneous payloads into a unified record:
+
+  ```JSON
+  {
+  "source": "...",
+  "doi": "...",
+  "arxiv_id": "...",
+  "title": "...",
+  "authors": ["..."],
+  "abstract": "...",
+  "year": 2024,
+  "url": "...",
+  "subjects": ["..."]
+  ```
+- StorageAgent – de-duplicates across sources (priority: DOI → arXiv ID → title) and persists CSV/HTML/JSON.
+- CoordinatorAgent – orchestrates the flow end-to-end (plans → fetch → extract → dedupe → persist).
+
+---
+## Technical Documentation
+
+**APIs**  
+- [arXiv API User Manual](https://arxiv.org/help/api/user-manual) – Atom feed query parameters and record structure.  
+- [Crossref REST API](https://api.crossref.org/swagger-ui/index.html) – JSON response fields and query parameters.  
+- [DOAJ API v3](https://doaj.org/api/v3/docs) – optional open access metadata endpoint.  
+
+**Python Libraries**  
+- [requests: HTTP for Humans](https://requests.readthedocs.io/en/latest/) – HTTP client used for API calls.  
+- [feedparser: Universal Feed Parser](https://feedparser.readthedocs.io/en/latest/) – parses arXiv Atom XML to Python objects.  
+- [python-dateutil](https://dateutil.readthedocs.io/en/stable/) – parses publication dates to extract years.  
+- [pytest](https://docs.pytest.org/en/stable/) – unit testing framework for evidence of testing.  
