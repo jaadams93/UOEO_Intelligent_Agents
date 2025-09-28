@@ -35,7 +35,8 @@ class ExtractAgent:
         Parse arXiv Atom XML (as text) into our normalised record list.
         - feedparser turns the feed into entries with id/title/summary/authors/links/etc.
         - We try to parse 'published' to get a publication year.
-        - DOI sometimes appears as a link with title 'doi'.
+        - Prefer the <link rel="alternate"> as the human-viewable arXiv page URL.
+        - Capture DOI separately (usually appears as <link title="doi" href="..."> or a doi.org href).
         """
         feed = feedparser.parse(atom_text)
         items: List[Dict[str, Any]] = []
@@ -58,14 +59,25 @@ class ExtractAgent:
                     # If date parsing fails, we just leave year as None.
                     pass
 
-            # Main link back to the arXiv record.
-            url = getattr(e, "link", None)
-
-            # DOI (if available) is often exposed as a <link title="doi" href="...">
+            # Prefer 'rel="alternate"' as the display URL; capture DOI link separately.
+            url = None
             doi = None
-            for link in getattr(e, "links", []):
-                if (link.get("title") or "").lower() == "doi":
-                    doi = link.get("href")
+            for link in getattr(e, "links", []) or []:
+                rel = (link.get("rel") or "").lower()
+                title_attr = (link.get("title") or "").lower()
+                href = link.get("href")
+
+                # Human-viewable arXiv page
+                if rel == "alternate" and href and not url:
+                    url = href
+
+                # DOI link (arXiv exposes as title="doi"; also accept doi.org hrefs)
+                if (title_attr == "doi") or (href and "doi.org/" in href):
+                    doi = href
+
+            # Fallbacks: if no explicit 'alternate' link, use e.link or arXiv id.
+            if not url:
+                url = getattr(e, "link", None) or arxiv_id
 
             # Build the normalised record.
             items.append({
