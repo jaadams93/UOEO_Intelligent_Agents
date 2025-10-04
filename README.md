@@ -34,8 +34,7 @@ From the project root:
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate    # Linux/Mac
-# .venv\Scripts\activate     # Windows (PowerShell)
+source .venv/bin/activate    
 
 pip install -r requirements.txt
 ```
