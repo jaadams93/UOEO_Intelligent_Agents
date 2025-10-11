@@ -74,12 +74,26 @@ results/machine-learning-for-fraud-detection_YYYYMMDD_HHMMSS.log.json
 
 ## Automated Testing
 
-Run unit tests using pytest:
-```python
+Run unit tests using **pytest**:
+
+```bash
 pytest -q
 ```
 
-This provides evidence of execution and correctness (e.g., deduplication, file persistence).
+or, for more detailed output showing each individual test:
+
+```bash
+pytest -v
+```
+
+These tests provide **evidence of execution and correctness**, verifying key functionality such as:
+
+- Extraction of fields from API responses  
+- Deduplication logic (DOI → arXiv ID → title)  
+- CSV/HTML/LOG file creation  
+- Log integrity and evidence snapshots  
+
+The results confirm that all major components (ExtractAgent, StorageAgent, etc.) work as expected and that the system runs end-to-end without errors.
 
 ⸻
 
