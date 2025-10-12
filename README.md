@@ -9,8 +9,6 @@ A lightweight multi-agent tool, developed with Python, that queries academic res
 
 > **DOAJ** is optional via `--with-doaj` (off by default).
 
----
-
 ## Features
 
 - **Multi-agent architecture**: Discovery, Fetch, Extract, Storage, and Coordinator agents cooperate to complete the workflow.
@@ -19,14 +17,10 @@ A lightweight multi-agent tool, developed with Python, that queries academic res
 - **Portable**: runs locally, no database or cloud required.
 - **Evidence-friendly**: raw snapshots are always saved for demo/evidence.
 
----
-
 ## Prerequisites
 
 - Python **3.10+**
 - (Recommended) GitHub Codespaces or any environment with internet access
-
----
 
 ## Install (pip + venv)
 
@@ -38,8 +32,6 @@ source .venv/bin/activate
 
 pip install -r requirements.txt
 ```
-
-⸻
 
 ## Run a Query
 
@@ -70,8 +62,6 @@ results/machine-learning-for-fraud-detection_YYYYMMDD_HHMMSS.log.json
 - LOG – JSON with run parameters, counts, timestamps, file paths.
 - Snapshots – raw API payloads (saved by default for evidence of execution).
 
-⸻
-
 ## Automated Testing
 
 Run unit tests using **pytest**:
@@ -95,8 +85,6 @@ These tests provide **evidence of execution and correctness**, verifying key fun
 
 The results confirm that all major components (ExtractAgent, StorageAgent, etc.) work as expected and that the system runs end-to-end without errors.
 
-⸻
-
 ## Project Structure
 
 ```
@@ -114,8 +102,6 @@ The results confirm that all major components (ExtractAgent, StorageAgent, etc.)
 ├── .gitignore               # Ignore caches, venv, and results
 └── results/                 # Output folder (auto-created)
 ```
-
-⸻
 
 ## Project Architecture
 
@@ -142,8 +128,6 @@ The results confirm that all major components (ExtractAgent, StorageAgent, etc.)
 - StorageAgent – de-duplicates across sources (priority: DOI → arXiv ID → title) and persists CSV/HTML/JSON.
 - CoordinatorAgent – orchestrates the full pipeline (plans → fetch → extract → dedupe → persist).
 
-⸻
-
 ## Technical Documentation
 
 **APIs**  
@@ -157,4 +141,10 @@ The results confirm that all major components (ExtractAgent, StorageAgent, etc.)
 - [python-dateutil](https://dateutil.readthedocs.io/en/stable/) – parses publication dates to extract years.  
 - [pytest](https://docs.pytest.org/en/stable/) – unit testing framework for evidence of testing.
   
----
+
+## Reference List
+
+- Bramer, W.M. et al. (2018) ‘A systematic approach to searching: an efficient and complete method to develop literature searches’, Journal of the Medical Library Association: JMLA, 106(4), pp. 531–541. Available at: https://doi.org/10.5195/jmla.2018.283.
+- Brown, M.A. et al. (2024) ‘Web scraping for research: Legal, ethical, institutional, and scientific considerations’, arXiv [cs.CY]. Available at: http://arxiv.org/abs/2410.23432.
+- Wooldridge, M. (2009) An Introduction to MultiAgent Systems [EPUB]. 2nd edn. Chichester, England: John Wiley & Sons.
+
